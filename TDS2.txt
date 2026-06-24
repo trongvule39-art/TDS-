@@ -1,8 +1,8 @@
 -- =========================================================================
--- CẤU HÌNH KEY VÀ LINK CỦA BẠN TẠI ĐÂY (CÓ THỂ TỰ SỬA KHI MUỐN ĐỔI)
+-- CẤU HÌNH LINK CHỨA KEY VÀ LINK SCRIPT CHÍNH CỦA BẠN
 -- =========================================================================
-local CORRECT_KEY = "TrongVuHub_FreeKey_2026"  -- <--- Sửa chữ trong ngoặc này để đổi Key
-local GET_KEY_LINK = "https://cuongbokit.blogspot.com/p/bam-vao-day-ngyouu.html?name=Keys&content=ai%20hỏi%20thằng%20chủ%20key%20là%20gì" -- <--- Sửa link lấy key của bạn tại đây
+local KEY_URL = "https://raw.githubusercontent.com/trongvule39-art/key/refs/heads/main/key.txt"
+local GET_KEY_LINK = "https://discord.gg/trongvuhub"
 -- =========================================================================
 
 -- Xóa GUI cũ nếu có để tránh trùng lặp
@@ -10,7 +10,7 @@ if game:GetService("CoreGui"):FindFirstChild("TrongVuKeySystem") then
     game:GetService("CoreGui"):FindFirstChild("TrongVuKeySystem"):Destroy()
 end
 
--- Tạo Giao Diện (GUI) bằng Code Thuần
+-- Khởi tạo Giao Diện (GUI)
 local ScreenGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local Title = Instance.new("TextLabel")
@@ -26,29 +26,26 @@ ScreenGui.Name = "TrongVuKeySystem"
 ScreenGui.Parent = game:GetService("CoreGui")
 ScreenGui.ResetOnSpawn = false
 
--- Bảng chính
 MainFrame.Name = "MainFrame"
 MainFrame.Parent = ScreenGui
 MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
 MainFrame.Position = UDim2.new(0.5, -175, 0.5, -100)
 MainFrame.Size = UDim2.new(0, 350, 0, 200)
 MainFrame.Active = true
-MainFrame.Draggable = true -- Cho phép kéo di chuyển trên màn hình
+MainFrame.Draggable = true
 
 UICorner.Parent = MainFrame
 
--- Tiêu đề
 Title.Name = "Title"
 Title.Parent = MainFrame
 Title.BackgroundTransparency = 1
 Title.Position = UDim2.new(0, 0, 0, 10)
 Title.Size = UDim2.new(1, 0, 0, 30)
 Title.Font = Enum.Font.SourceSansBold
-Title.Text = "TRỌNG VŨ X NHẬT BÉO MARCOS - VERIFICATION"
+Title.Text = "TRỌNG VŨ HUB - VERIFICATION"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
 Title.TextSize = 20
 
--- Ô nhập Key
 TextBox.Parent = MainFrame
 TextBox.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
 TextBox.Position = UDim2.new(0.1, 0, 0.35, 0)
@@ -61,7 +58,6 @@ TextBox.TextSize = 16
 
 UICorner2.Parent = TextBox
 
--- Nút Check Key
 CheckBtn.Name = "CheckBtn"
 CheckBtn.Parent = MainFrame
 CheckBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 70)
@@ -74,7 +70,6 @@ CheckBtn.TextSize = 16
 
 UICorner3.Parent = CheckBtn
 
--- Nút Get Key
 GetKeyBtn.Name = "GetKeyBtn"
 GetKeyBtn.Parent = MainFrame
 GetKeyBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
@@ -92,31 +87,64 @@ GetKeyBtn.MouseButton1Click:Connect(function()
     if setclipboard then
         setclipboard(GET_KEY_LINK)
         GetKeyBtn.Text = "Đã Copy Link!"
-        task.wait(2)
-        GetKeyBtn.Text = "Get Key"
-    else
-        GetKeyBtn.Text = "Không hỗ trợ Copy!"
-        task.wait(2)
+        task.wait(1.5)
         GetKeyBtn.Text = "Get Key"
     end
 end)
 
--- Xử lý sự kiện nút Check Key
+-- Xử lý kiểm tra Key trực tiếp
 CheckBtn.MouseButton1Click:Connect(function()
-    if TextBox.Text == CORRECT_KEY then
-        CheckBtn.Text = "ĐÚNG KEY! LOADING..."
+    local success, currentKey = pcall(function()
+        return game:HttpGet(KEY_URL):gsub("%s+", "")
+    end)
+    
+    if not success or not currentKey then
+        CheckBtn.Text = "LỖI KẾT NỐI SERVER!"
+        CheckBtn.BackgroundColor3 = Color3.fromRGB(200, 100, 0)
+        task.wait(1.5)
+        CheckBtn.Text = "Check Key"
+        CheckBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 70)
+        return
+    end
+
+    if TextBox.Text == currentKey then
+        local savedKey = TextBox.Text
+        
+        -- Cập nhật chữ ĐÚNG KEY ngay lập tức cho người dùng thấy
+        CheckBtn.Text = "KEY ĐÚNG! ĐANG TẢI..."
         CheckBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+        
+        -- Đợi 1 giây để giao diện kịp hiển thị trạng thái màu xanh
         task.wait(1)
+        ScreenGui:Destroy() -- Xóa bảng nhập key đi
         
-        -- Xóa bảng nhập key
-        ScreenGui:Destroy()
+        task.spawn(function()
+            -- Tải script chính tds1 từ GitHub của bạn
+            pcall(function()
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/trongvule39-art/TowerDefenseSimulator/refs/heads/main/tds1.txt"))()
+            end)
+        end)
+
+        -- Vòng lặp quét ngầm thời gian thực (Cứ mỗi 10 giây quét một lần)
+        task.spawn(function()
+            while true do
+                task.wait(10)
+                local reCheck, latestKey = pcall(function()
+                    return game:HttpGet(KEY_URL):gsub("%s+", "")
+                end)
+                
+                if reCheck and latestKey ~= savedKey then
+                    game.Players.LocalPlayer:Kick("TrongVu Hub: Key đã bị thay đổi hoặc hết hạn! Vui lòng mở lại script và get key mới.")
+                    break
+                end
+            end
+        end)
         
-        -- Tải script chính của bạn từ GitHub
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/trongvule39-art/TowerDefenseSimulator/refs/heads/main/tds1.txt"))()
     else
+        -- Cập nhật chữ SAI KEY
         CheckBtn.Text = "SAI KEY! THỬ LẠI"
         CheckBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-        task.wait(2)
+        task.wait(1.5)
         CheckBtn.Text = "Check Key"
         CheckBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 70)
     end
