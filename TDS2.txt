@@ -1,0 +1,123 @@
+-- =========================================================================
+-- CẤU HÌNH KEY VÀ LINK CỦA BẠN TẠI ĐÂY (CÓ THỂ TỰ SỬA KHI MUỐN ĐỔI)
+-- =========================================================================
+local CORRECT_KEY = "TrongVuHub_FreeKey_2026"  -- <--- Sửa chữ trong ngoặc này để đổi Key
+local GET_KEY_LINK = "https://cuongbokit.blogspot.com/p/bam-vao-day-ngyouu.html?name=Keys&content=ai%20hỏi%20thằng%20chủ%20key%20là%20gì" -- <--- Sửa link lấy key của bạn tại đây
+-- =========================================================================
+
+-- Xóa GUI cũ nếu có để tránh trùng lặp
+if game:GetService("CoreGui"):FindFirstChild("TrongVuKeySystem") then
+    game:GetService("CoreGui"):FindFirstChild("TrongVuKeySystem"):Destroy()
+end
+
+-- Tạo Giao Diện (GUI) bằng Code Thuần
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local Title = Instance.new("TextLabel")
+local TextBox = Instance.new("TextBox")
+local CheckBtn = Instance.new("TextButton")
+local GetKeyBtn = Instance.new("TextButton")
+local UICorner = Instance.new("UICorner")
+local UICorner2 = Instance.new("UICorner")
+local UICorner3 = Instance.new("UICorner")
+local UICorner4 = Instance.new("UICorner")
+
+ScreenGui.Name = "TrongVuKeySystem"
+ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.ResetOnSpawn = false
+
+-- Bảng chính
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = ScreenGui
+MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+MainFrame.Position = UDim2.new(0.5, -175, 0.5, -100)
+MainFrame.Size = UDim2.new(0, 350, 0, 200)
+MainFrame.Active = true
+MainFrame.Draggable = true -- Cho phép kéo di chuyển trên màn hình
+
+UICorner.Parent = MainFrame
+
+-- Tiêu đề
+Title.Name = "Title"
+Title.Parent = MainFrame
+Title.BackgroundTransparency = 1
+Title.Position = UDim2.new(0, 0, 0, 10)
+Title.Size = UDim2.new(1, 0, 0, 30)
+Title.Font = Enum.Font.SourceSansBold
+Title.Text = "TRỌNG VŨ X NHẬT BÉO MARCOS - VERIFICATION"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextSize = 20
+
+-- Ô nhập Key
+TextBox.Parent = MainFrame
+TextBox.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
+TextBox.Position = UDim2.new(0.1, 0, 0.35, 0)
+TextBox.Size = UDim2.new(0.8, 0, 0, 35)
+TextBox.Font = Enum.Font.SourceSans
+TextBox.PlaceholderText = "Nhập Key vào đây..."
+TextBox.Text = ""
+TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+TextBox.TextSize = 16
+
+UICorner2.Parent = TextBox
+
+-- Nút Check Key
+CheckBtn.Name = "CheckBtn"
+CheckBtn.Parent = MainFrame
+CheckBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 70)
+CheckBtn.Position = UDim2.new(0.1, 0, 0.65, 0)
+CheckBtn.Size = UDim2.new(0.38, 0, 0, 40)
+CheckBtn.Font = Enum.Font.SourceSansBold
+CheckBtn.Text = "Check Key"
+CheckBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CheckBtn.TextSize = 16
+
+UICorner3.Parent = CheckBtn
+
+-- Nút Get Key
+GetKeyBtn.Name = "GetKeyBtn"
+GetKeyBtn.Parent = MainFrame
+GetKeyBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
+GetKeyBtn.Position = UDim2.new(0.52, 0, 0.65, 0)
+GetKeyBtn.Size = UDim2.new(0.38, 0, 0, 40)
+GetKeyBtn.Font = Enum.Font.SourceSansBold
+GetKeyBtn.Text = "Get Key"
+GetKeyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+GetKeyBtn.TextSize = 16
+
+UICorner4.Parent = GetKeyBtn
+
+-- Xử lý sự kiện nút Get Key
+GetKeyBtn.MouseButton1Click:Connect(function()
+    if setclipboard then
+        setclipboard(GET_KEY_LINK)
+        GetKeyBtn.Text = "Đã Copy Link!"
+        task.wait(2)
+        GetKeyBtn.Text = "Get Key"
+    else
+        GetKeyBtn.Text = "Không hỗ trợ Copy!"
+        task.wait(2)
+        GetKeyBtn.Text = "Get Key"
+    end
+end)
+
+-- Xử lý sự kiện nút Check Key
+CheckBtn.MouseButton1Click:Connect(function()
+    if TextBox.Text == CORRECT_KEY then
+        CheckBtn.Text = "ĐÚNG KEY! LOADING..."
+        CheckBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
+        task.wait(1)
+        
+        -- Xóa bảng nhập key
+        ScreenGui:Destroy()
+        
+        -- Tải script chính của bạn từ GitHub
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/trongvule39-art/TowerDefenseSimulator/refs/heads/main/tds1.txt"))()
+    else
+        CheckBtn.Text = "SAI KEY! THỬ LẠI"
+        CheckBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+        task.wait(2)
+        CheckBtn.Text = "Check Key"
+        CheckBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 70)
+    end
+end)
