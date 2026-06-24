@@ -14,6 +14,7 @@ end
 local ScreenGui = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local Title = Instance.new("TextLabel")
+local CloseBtn = Instance.new("TextButton") -- Tạo nút X đóng bảng
 local TextBox = Instance.new("TextBox")
 local CheckBtn = Instance.new("TextButton")
 local GetKeyBtn = Instance.new("TextButton")
@@ -39,12 +40,29 @@ UICorner.Parent = MainFrame
 Title.Name = "Title"
 Title.Parent = MainFrame
 Title.BackgroundTransparency = 1
-Title.Position = UDim2.new(0, 0, 0, 10)
-Title.Size = UDim2.new(1, 0, 0, 30)
+Title.Position = UDim2.new(0, 15, 0, 10) -- Lùi lề trái một chút cho đẹp
+Title.Size = UDim2.new(0, 290, 0, 30)   -- Thu nhỏ chiều rộng lại để nhường chỗ cho nút X
 Title.Font = Enum.Font.SourceSansBold
 Title.Text = "TRỌNG VŨ X NHẬT BÉO MARCOS - VERIFICATION"
 Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextSize = 20
+Title.TextSize = 15 -- Giảm text size một chút để không bị tràn chữ khi có nút X
+Title.TextXAlignment = Enum.TextXAlignment.Left
+
+-- Cấu hình nút Đóng "X"
+CloseBtn.Name = "CloseBtn"
+CloseBtn.Parent = MainFrame
+CloseBtn.BackgroundTransparency = 1
+CloseBtn.Position = UDim2.new(1, -35, 0, 10)
+CloseBtn.Size = UDim2.new(0, 25, 0, 25)
+CloseBtn.Font = Enum.Font.SourceSansBold
+CloseBtn.Text = "X"
+CloseBtn.TextColor3 = Color3.fromRGB(220, 60, 60) -- Màu đỏ nổi bật
+CloseBtn.TextSize = 18
+
+-- Xử lý sự kiện khi click vào nút X để tắt bảng
+CloseBtn.MouseButton1Click:Connect(function()
+    ScreenGui:Destroy()
+end)
 
 TextBox.Parent = MainFrame
 TextBox.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
