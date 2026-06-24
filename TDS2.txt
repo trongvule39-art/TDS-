@@ -2,7 +2,7 @@
 -- CẤU HÌNH LINK CHỨA KEY VÀ LINK SCRIPT CHÍNH CỦA BẠN
 -- =========================================================================
 local KEY_URL = "https://raw.githubusercontent.com/trongvule39-art/key/refs/heads/main/key.txt"
-local GET_KEY_LINK = "https://cuongbokit.blogspot.com/p/bam-vao-day-ngyouu.html?name=Key%20là%20:%20TrongVuHub_Freekey_2026&content=TrongVuHub_Freekey_2026"
+local GET_KEY_LINK = "https://bit.ly/4xMtxkW"
 -- =========================================================================
 
 -- Xóa GUI cũ nếu có để tránh trùng lặp
