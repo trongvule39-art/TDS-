@@ -1,169 +1,158 @@
 -- =========================================================================
--- CẤU HÌNH LINK CHỨA KEY VÀ LINK SCRIPT CHÍNH CỦA BẠN
--- =========================================================================
-local KEY_URL = "https://raw.githubusercontent.com/trongvule39-art/key/refs/heads/main/key.txt"
-local GET_KEY_LINK = "https://bit.ly/4xMtxkW"
+-- TRỌNG VŨ HUB - LOADER SCRIPT (HƯỚNG DẪN COPY MENU CHÍNH)
 -- =========================================================================
 
--- Xóa GUI cũ nếu có để tránh trùng lặp
-if game:GetService("CoreGui"):FindFirstChild("TrongVuKeySystem") then
-    game:GetService("CoreGui"):FindFirstChild("TrongVuKeySystem"):Destroy()
+-- Khởi tạo UI và dọn dẹp phiên bản cũ...
+local CoreGui = game:GetService("CoreGui")
+local TweenService = game:GetService("TweenService")
+
+-- Dọn dẹp loader cũ nếu có trùng lặp để tránh chồng chéo giao diện
+if CoreGui:FindFirstChild("TrongVuHubLoader") then
+CoreGui:FindFirstChild("TrongVuHubLoader"):Destroy()
 end
 
--- Khởi tạo Giao Diện (GUI)
 local ScreenGui = Instance.new("ScreenGui")
-local MainFrame = Instance.new("Frame")
-local Title = Instance.new("TextLabel")
-local CloseBtn = Instance.new("TextButton") -- Tạo nút X đóng bảng
-local TextBox = Instance.new("TextBox")
-local CheckBtn = Instance.new("TextButton")
-local GetKeyBtn = Instance.new("TextButton")
-local UICorner = Instance.new("UICorner")
-local UICorner2 = Instance.new("UICorner")
-local UICorner3 = Instance.new("UICorner")
-local UICorner4 = Instance.new("UICorner")
-
-ScreenGui.Name = "TrongVuKeySystem"
-ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.Name = "TrongVuHubLoader"
+ScreenGui.Parent = CoreGui
 ScreenGui.ResetOnSpawn = false
 
-MainFrame.Name = "MainFrame"
-MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
-MainFrame.Position = UDim2.new(0.5, -175, 0.5, -100)
-MainFrame.Size = UDim2.new(0, 350, 0, 200)
-MainFrame.Active = true
-MainFrame.Draggable = true
+-- Định nghĩa bảng màu đồng bộ Gradient Blue...
+local BLUE_SUPER_LIGHT  = Color3.fromRGB(180, 225, 255)
+local BLUE_LIGHT        = Color3.fromRGB(0, 160, 255)
+local BLUE_MAIN         = Color3.fromRGB(0, 100, 200)
+local BLUE_DARK         = Color3.fromRGB(15, 25, 45)
+local BLUE_SUPER_DARK  = Color3.fromRGB(8, 12, 25)
 
-UICorner.Parent = MainFrame
+-- Tạo khung giao diện chính cho Card thông báo...
+local Frame = Instance.new("Frame")
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = BLUE_SUPER_DARK
+Frame.BackgroundTransparency = 0.15
+Frame.Size = UDim2.new(0, 360, 0, 150)
+Frame.Position = UDim2.new(0.5, -180, 0.45, -75) -- Bắt đầu hơi cao một chút để chạy hiệu ứng rơi xuống
 
-Title.Name = "Title"
-Title.Parent = MainFrame
-Title.BackgroundTransparency = 1
-Title.Position = UDim2.new(0, 15, 0, 10) -- Lùi lề trái một chút cho đẹp
-Title.Size = UDim2.new(0, 290, 0, 30)   -- Thu nhỏ chiều rộng lại để nhường chỗ cho nút X
-Title.Font = Enum.Font.SourceSansBold
-Title.Text = "TRỌNG VŨ X NHẬT BÉO MARCOS - VERIFICATION"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextSize = 15 -- Giảm text size một chút để không bị tràn chữ khi có nút X
-Title.TextXAlignment = Enum.TextXAlignment.Left
+local Corner = Instance.new("UICorner")
+Corner.CornerRadius = UDim.new(0, 8)
+Corner.Parent = Frame
 
--- Cấu hình nút Đóng "X"
-CloseBtn.Name = "CloseBtn"
-CloseBtn.Parent = MainFrame
+local Stroke = Instance.new("UIStroke")
+Stroke.Thickness = 1.5
+Stroke.Color = BLUE_MAIN
+Stroke.Parent = Frame
+
+-- Tạo nhãn thông báo chính và nút đóng X...
+local Label = Instance.new("TextLabel")
+Label.Parent = Frame
+Label.BackgroundTransparency = 1
+Label.Position = UDim2.new(0, 15, 0, 15)
+Label.Size = UDim2.new(1, -55, 0, 35)
+Label.Font = Enum.Font.SourceSansBold
+Label.Text = "Hãy chuyển qua script menu để sử dụng:"
+Label.TextColor3 = BLUE_SUPER_LIGHT
+Label.TextSize = 15
+Label.TextWrapped = true
+Label.TextXAlignment = Enum.TextXAlignment.Left
+
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Parent = Frame
 CloseBtn.BackgroundTransparency = 1
 CloseBtn.Position = UDim2.new(1, -35, 0, 10)
 CloseBtn.Size = UDim2.new(0, 25, 0, 25)
 CloseBtn.Font = Enum.Font.SourceSansBold
 CloseBtn.Text = "X"
-CloseBtn.TextColor3 = Color3.fromRGB(220, 60, 60) -- Màu đỏ nổi bật
+CloseBtn.TextColor3 = Color3.fromRGB(255, 100, 100)
 CloseBtn.TextSize = 18
 
--- Xử lý sự kiện khi click vào nút X để tắt bảng
 CloseBtn.MouseButton1Click:Connect(function()
-    ScreenGui:Destroy()
+local fadeOut = TweenService:Create(Frame, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+BackgroundTransparency = 1,
+Position = UDim2.new(0.5, -180, 0.55, -75)
+})
+TweenService:Create(Stroke, TweenInfo.new(0.2), {Transparency = 1}):Play()
+fadeOut:Play()
+fadeOut.Completed:Connect(function()
+ScreenGui:Destroy()
+end)
 end)
 
-TextBox.Parent = MainFrame
-TextBox.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
-TextBox.Position = UDim2.new(0.1, 0, 0.35, 0)
-TextBox.Size = UDim2.new(0.8, 0, 0, 35)
-TextBox.Font = Enum.Font.SourceSans
-TextBox.PlaceholderText = "Nhập Key vào đây..."
-TextBox.Text = ""
-TextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextBox.TextSize = 16
+-- Tạo hộp TextBox chứa liên kết loadstring...
+local TargetScript = 'loadstring(game:HttpGet("https://raw.githubusercontent.com/trongvule39-art/menu/refs/heads/main/menu.txt", true))()'
 
-UICorner2.Parent = TextBox
+local TextBox = Instance.new("TextBox")
+TextBox.Parent = Frame
+TextBox.BackgroundColor3 = BLUE_DARK
+TextBox.Position = UDim2.new(0, 15, 0, 55)
+TextBox.Size = UDim2.new(1, -30, 0, 35)
+TextBox.Font = Enum.Font.Code
+TextBox.Text = TargetScript
+TextBox.TextColor3 = Color3.fromRGB(240, 240, 240)
+TextBox.TextSize = 10
+TextBox.TextWrapped = true
+TextBox.TextEditable = false -- Ngăn người dùng sửa nhầm link
+TextBox.ClearTextOnFocus = false
 
-CheckBtn.Name = "CheckBtn"
-CheckBtn.Parent = MainFrame
-CheckBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 70)
-CheckBtn.Position = UDim2.new(0.1, 0, 0.65, 0)
-CheckBtn.Size = UDim2.new(0.38, 0, 0, 40)
-CheckBtn.Font = Enum.Font.SourceSansBold
-CheckBtn.Text = "Check Key"
-CheckBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-CheckBtn.TextSize = 16
+local BoxCorner = Instance.new("UICorner")
+BoxCorner.CornerRadius = UDim.new(0, 5)
+BoxCorner.Parent = TextBox
 
-UICorner3.Parent = CheckBtn
+local BoxStroke = Instance.new("UIStroke")
+BoxStroke.Thickness = 1
+BoxStroke.Color = Color3.fromRGB(40, 60, 90)
+BoxStroke.Parent = TextBox
 
-GetKeyBtn.Name = "GetKeyBtn"
-GetKeyBtn.Parent = MainFrame
-GetKeyBtn.BackgroundColor3 = Color3.fromRGB(150, 0, 0)
-GetKeyBtn.Position = UDim2.new(0.52, 0, 0.65, 0)
-GetKeyBtn.Size = UDim2.new(0.38, 0, 0, 40)
-GetKeyBtn.Font = Enum.Font.SourceSansBold
-GetKeyBtn.Text = "Get Key"
-GetKeyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-GetKeyBtn.TextSize = 16
+-- Tạo nút tự động Copy Script siêu nhanh...
+local CopyBtn = Instance.new("TextButton")
+CopyBtn.Parent = Frame
+CopyBtn.BackgroundColor3 = BLUE_MAIN
+CopyBtn.Position = UDim2.new(0.04, 0, 0.72, 0)
+CopyBtn.Size = UDim2.new(0.92, 0, 0, 30)
+CopyBtn.Font = Enum.Font.SourceSansBold
+CopyBtn.Text = "COPY SCRIPT"
+CopyBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CopyBtn.TextSize = 14
 
-UICorner4.Parent = GetKeyBtn
+local CopyCorner = Instance.new("UICorner")
+CopyCorner.CornerRadius = UDim.new(0, 5)
+CopyCorner.Parent = CopyBtn
 
--- Xử lý sự kiện nút Get Key
-GetKeyBtn.MouseButton1Click:Connect(function()
-    if setclipboard then
-        setclipboard(GET_KEY_LINK)
-        GetKeyBtn.Text = "Đã Copy Link!"
-        task.wait(1.5)
-        GetKeyBtn.Text = "Get Key"
-    end
+CopyBtn.MouseButton1Click:Connect(function()
+-- Thực hiện sao chép bằng hàm setclipboard chuẩn của các Executor Roblox
+if setclipboard then
+setclipboard(TargetScript)
+CopyBtn.Text = "ĐÃ COPY VÀO BỘ NHỚ TẠM (CLIPBOARD)!"
+CopyBtn.BackgroundColor3 = Color3.fromRGB(46, 117, 89) -- Đổi sang màu xanh lá cây báo thành công
+task.wait(1.5)
+CopyBtn.Text = "COPY SCRIPT"
+CopyBtn.BackgroundColor3 = BLUE_MAIN
+else
+-- Fallback nếu executor không hỗ trợ setclipboard
+CopyBtn.Text = "HÃY TỰ BÔI ĐEN ĐỂ COPY!"
+CopyBtn.BackgroundColor3 = Color3.fromRGB(150, 50, 50)
+task.wait(1.5)
+CopyBtn.Text = "COPY SCRIPT"
+CopyBtn.BackgroundColor3 = BLUE_MAIN
+end
 end)
 
--- Xử lý kiểm tra Key trực tiếp
-CheckBtn.MouseButton1Click:Connect(function()
-    local success, currentKey = pcall(function()
-        return game:HttpGet(KEY_URL):gsub("%s+", "")
-    end)
-    
-    if not success or not currentKey then
-        CheckBtn.Text = "LỖI KẾT NỐI SERVER!"
-        CheckBtn.BackgroundColor3 = Color3.fromRGB(200, 100, 0)
-        task.wait(1.5)
-        CheckBtn.Text = "Check Key"
-        CheckBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 70)
-        return
-    end
+-- Kích hoạt hiệu ứng xuất hiện mượt mà...
+Frame.BackgroundTransparency = 1
+Stroke.Transparency = 1
+Label.TextTransparency = 1
+CloseBtn.TextTransparency = 1
+TextBox.BackgroundTransparency = 1
+TextBox.TextTransparency = 1
+BoxStroke.Transparency = 1
+CopyBtn.BackgroundTransparency = 1
+CopyBtn.TextTransparency = 1
 
-    if TextBox.Text == currentKey then
-        local savedKey = TextBox.Text
-        
-        -- Cập nhật chữ ĐÚNG KEY ngay lập tức cho người dùng thấy
-        CheckBtn.Text = "KEY ĐÚNG! ĐANG TẢI..."
-        CheckBtn.BackgroundColor3 = Color3.fromRGB(0, 200, 100)
-        
-        -- Đợi 1 giây để giao diện kịp hiển thị trạng thái màu xanh
-        task.wait(1)
-        ScreenGui:Destroy() -- Xóa bảng nhập key đi
-        
-        task.spawn(function()
-            -- Tải script chính tds1 từ GitHub của bạn
-            pcall(function()
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/trongvule39-art/TowerDefenseSimulator/refs/heads/main/tds1.txt"))()
-            end)
-        end)
+TweenService:Create(Frame, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+Position = UDim2.new(0.5, -180, 0.5, -75),
+BackgroundTransparency = 0.15
+}):Play()
 
-        -- Vòng lặp quét ngầm thời gian thực (Cứ mỗi 10 giây quét một lần)
-        task.spawn(function()
-            while true do
-                task.wait(10)
-                local reCheck, latestKey = pcall(function()
-                    return game:HttpGet(KEY_URL):gsub("%s+", "")
-                end)
-                
-                if reCheck and latestKey ~= savedKey then
-                    game.Players.LocalPlayer:Kick("TrongVu Hub: Key đã bị thay đổi hoặc hết hạn! Vui lòng mở lại script và get key mới.")
-                    break
-                end
-            end
-        end)
-        
-    else
-        -- Cập nhật chữ SAI KEY
-        CheckBtn.Text = "SAI KEY! THỬ LẠI"
-        CheckBtn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-        task.wait(1.5)
-        CheckBtn.Text = "Check Key"
-        CheckBtn.BackgroundColor3 = Color3.fromRGB(0, 150, 70)
-    end
-end)
+TweenService:Create(Stroke, TweenInfo.new(0.5), {Transparency = 0}):Play()
+TweenService:Create(Label, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
+TweenService:Create(CloseBtn, TweenInfo.new(0.5), {TextTransparency = 0}):Play()
+TweenService:Create(TextBox, TweenInfo.new(0.5), {BackgroundTransparency = 0, TextTransparency = 0}):Play()
+TweenService:Create(BoxStroke, TweenInfo.new(0.5), {Transparency = 0}):Play()
+TweenService:Create(CopyBtn, TweenInfo.new(0.5), {BackgroundTransparency = 0, TextTransparency = 0}):Play()
